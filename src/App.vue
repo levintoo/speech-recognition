@@ -16,14 +16,20 @@ onMounted(() => {
     isRecording.value = true
   }
 
-   sr.onend = () => {
+  sr.onend = () => {
     console.log("SR stoped")
     isRecording.value = false
   }
 
-    sr.onresult = (evt) => {
-      console.log(evt)
-    }
+  sr.onresult = (evt) => {
+    console.log(evt)
+    const t = Array.from(evt.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('')
+    console.log(t)
+    transcript.value = `${transcript.value} ${t}`
+  }
 
 });
 
@@ -40,17 +46,19 @@ const ToggleMic = () => {
 <template>
   <div>
     <h1>Hello</h1>
-    <button @click="ToggleMic()">Start</button>
+    <button @click="ToggleMic">Start</button>
+    <h3>{{ transcript }}</h3>
   </div>
 </template>
 
 <style>
-  * {
+* {
   margin: 0;
   padding: 0;
   font-family: 'Fira Sans', sans-serif;
   box-sizing: border-box;
 }
+
 body {
   background: #281936;
   color: #fff;
