@@ -22,13 +22,17 @@ onMounted(() => {
   }
 
   sr.onresult = (evt) => {
-    console.log(evt)
     const t = Array.from(evt.results)
       .map(result => result[0])
       .map(result => result.transcript)
       .join('')
     console.log(t)
     transcript.value = `${transcript.value} ${t}`
+  }
+  if ('speechSynthesis' in window) {
+    console.log("Web Speech API supported!")
+  } else {
+    console.log("Web Speech API not supported :-(")
   }
 
 });
