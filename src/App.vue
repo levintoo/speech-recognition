@@ -1,25 +1,58 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const count = ref(0)
-const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+const transcript = ref('')
+const isRecording = ref(false)
+
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
+const sr = new Recognition()
 
 onMounted(() => {
-  alert("mounted");
+  sr.continous = true
+  sr.interminResults = true
+
+  sr.onstart = () => {
+    console.log("SR started")
+    isRecording.value = true
+  }
+
+   sr.onend = () => {
+    console.log("SR stoped")
+    isRecording.value = false
+  }
+
+    sr.onresult = (evt) => {
+      console.log(evt)
+    }
+
 });
+
+const ToggleMic = () => {
+  if (isRecording.value) {
+    sr.stop()
+  }
+  else {
+    sr.start()
+  }
+}
 </script>
 
 <template>
   <div>
-    <h1 @click="count++">Hello from vue {{ count }}</h1>
-    <li v-for="item in items">
-      {{ item.message }}
-    </li>
+    <h1>Hello</h1>
+    <button @click="ToggleMic()">Start</button>
   </div>
 </template>
 
-<style scoped>
-h1 {
-  cursor: pointer;
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Sans', sans-serif;
+  box-sizing: border-box;
+}
+body {
+  background: #281936;
+  color: #fff;
 }
 </style>
